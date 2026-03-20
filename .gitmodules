@@ -1,33 +1,11 @@
 
-[submodule "platform/api-gateway"]
-	path = platform/api-gateway
-	url = https://github.com/ChamathDilshanC/Cafeteria-System-api-gateway.git
-
-[submodule "platform/config-server"]
-	path = platform/config-server
-	url = https://github.com/ChamathDilshanC/Cafeteria-System-config-server.git
-
-[submodule "platform/service-registry"]
-	path = platform/service-registry
-	url = https://github.com/ChamathDilshanC/Cafeteria-System-service-registry.git
-
-[submodule "services/kitchen-service"]
-	path = services/kitchen-service
-	url = https://github.com/ChamathDilshanC/Cafeteria-System-kitchen-service.git
-
-[submodule "services/menu-service"]
-	path = services/menu-service
-	url = https://github.com/ChamathDilshanC/Cafeteria-System-menu-service.git
-
-[submodule "services/order-service"]
-	path = services/order-service
-	url = https://github.com/ChamathDilshanC/Cafeteria-System-order-service.git
-
-[submodule "services/user-service"]
-	path = services/user-service
-	url = https://github.com/ChamathDilshanC/Cafeteria-System-user-service.git
-
 [submodule "webapp"]
 	path = webapp
 	url = https://github.com/ChamathDilshanC/Cafeteria-System-webapp.git
 
+[submodule "platform"]
+	path = platform
+	url = https://github.com/ChamathDilshanC/Cafeteria-System-Platform.git
+[submodule "services"]
+	path = services
+	url = https://github.com/ChamathDilshanC/Cafeteria-System-Services.git
