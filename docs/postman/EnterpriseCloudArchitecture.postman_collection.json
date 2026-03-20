@@ -1,0 +1,479 @@
+{
+  "info": {
+    "name": "Enterprise Cloud Architecture - Full API Collection",
+    "_postman_id": "eca-full-api-collection",
+    "description": "Complete API collection for the Enterprise Cloud Architecture project. All services: User, Menu, Order, Kitchen.\n\n**Base URL:** http://localhost:8080\n\n**Auth:** Login first, then copy the token to the `jwt_token` collection variable.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🔐 Auth Service",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Register a new user account."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('jwt_token', json.token);",
+                  "    console.log('Token saved to jwt_token variable');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Login with email and password. The JWT token is automatically saved to the `jwt_token` collection variable via a test script."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User (Me)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me"]
+            },
+            "description": "Get the profile of the currently authenticated user. Requires Bearer token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🍽️ Menu Service",
+      "item": [
+        {
+          "name": "Categories",
+          "item": [
+            {
+              "name": "Get All Categories",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/categories",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories"]
+                },
+                "description": "Retrieve all menu categories."
+              },
+              "response": []
+            },
+            {
+              "name": "Create Category",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/categories",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Burgers\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Create a new menu category. Requires Bearer token."
+              },
+              "response": []
+            },
+            {
+              "name": "Update Category",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/categories/:id",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories", ":id"],
+                  "variable": [
+                    { "key": "id", "value": "1", "description": "Category ID" }
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Gourmet Burgers\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Update an existing category by ID. Requires Bearer token."
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Category",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/categories/:id",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories", ":id"],
+                  "variable": [
+                    { "key": "id", "value": "1", "description": "Category ID" }
+                  ]
+                },
+                "description": "Delete a category by ID. Requires Bearer token."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Menu Items",
+          "item": [
+            {
+              "name": "Get All Menu Items",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/menu",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "menu"]
+                },
+                "description": "Get all menu items. Optionally filter by categoryId."
+              },
+              "response": []
+            },
+            {
+              "name": "Get Menu Items by Category",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/menu?categoryId=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "menu"],
+                  "query": [
+                    {
+                      "key": "categoryId",
+                      "value": "1",
+                      "description": "Filter by category ID"
+                    }
+                  ]
+                },
+                "description": "Get menu items filtered by a specific category."
+              },
+              "response": []
+            },
+            {
+              "name": "Get Menu Item by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/menu/:id",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "menu", ":id"],
+                  "variable": [
+                    { "key": "id", "value": "1", "description": "Menu Item ID" }
+                  ]
+                },
+                "description": "Get a single menu item by its ID."
+              },
+              "response": []
+            },
+            {
+              "name": "Create Menu Item",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/menu",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "menu"]
+                },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "data",
+                      "value": "{\"name\":\"Classic Burger\",\"description\":\"Juicy beef patty with lettuce and tomato\",\"price\":12.99,\"categoryId\":1,\"available\":true}",
+                      "type": "text",
+                      "contentType": "application/json"
+                    },
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": [],
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Create a new menu item. Send `data` as a JSON text part (content type: application/json) and optionally attach an image file. Requires Bearer token."
+              },
+              "response": []
+            },
+            {
+              "name": "Update Menu Item",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/menu/:id",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "menu", ":id"],
+                  "variable": [
+                    { "key": "id", "value": "1", "description": "Menu Item ID" }
+                  ]
+                },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "data",
+                      "value": "{\"name\":\"Classic Burger Updated\",\"description\":\"Updated description\",\"price\":14.99,\"categoryId\":1,\"available\":true}",
+                      "type": "text",
+                      "contentType": "application/json"
+                    },
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": [],
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Update a menu item by ID. Send `data` as a JSON text part (content type: application/json) and optionally attach a new image file. Requires Bearer token."
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Menu Item",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/menu/:id",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "menu", ":id"],
+                  "variable": [
+                    { "key": "id", "value": "1", "description": "Menu Item ID" }
+                  ]
+                },
+                "description": "Delete a menu item by ID. Requires Bearer token."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🛒 Order Service",
+      "item": [
+        {
+          "name": "Place Order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"menuItemId\": 2, \"quantity\": 2 },\n    { \"menuItemId\": 3, \"quantity\": 1 }\n  ],\n  \"notes\": \"No onions\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Place a new order. Requires Bearer token."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/my",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "my"]
+            },
+            "description": "Get all orders belonging to the authenticated user. Requires Bearer token."
+          },
+          "response": []
+        },
+        {
+          "name": "Pay for Order",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/:id/pay",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", ":id", "pay"],
+              "variable": [
+                { "key": "id", "value": "1", "description": "Order ID" }
+              ]
+            },
+            "description": "Mark an order as paid. Requires Bearer token."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/:id/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", ":id", "cancel"],
+              "variable": [
+                { "key": "id", "value": "1", "description": "Order ID" }
+              ]
+            },
+            "description": "Cancel an existing order. Requires Bearer token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👨‍🍳 Kitchen Service",
+      "item": [
+        {
+          "name": "Get Kitchen Queue",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/kitchen/queue",
+              "host": ["{{base_url}}"],
+              "path": ["api", "kitchen", "queue"]
+            },
+            "description": "Get the current kitchen order queue (for kitchen display screens). Requires Bearer token."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Kitchen Tickets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/kitchen/tickets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "kitchen", "tickets"]
+            },
+            "description": "Get all kitchen tickets (for management/admin view). Requires Bearer token."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Ticket Status",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/kitchen/tickets/:ticketId/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "kitchen", "tickets", ":ticketId", "status"],
+              "variable": [
+                {
+                  "key": "ticketId",
+                  "value": "1",
+                  "description": "Kitchen Ticket ID"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PREPARING\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Update the status of a kitchen ticket. Valid values: PENDING, PREPARING, READY, COMPLETED, CANCELLED. Requires Bearer token."
+          },
+          "response": []
+        },
+        {
+          "name": "[Internal] Create Kitchen Ticket",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/kitchen/tickets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "kitchen", "tickets"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": 3,\n  \"userId\": 1,\n  \"items\": [\n    { \"menuItemId\": 1, \"itemName\": \"Classic Burger\", \"quantity\": 2 }\n  ],\n  \"notes\": \"No onions\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "⚠️ INTERNAL ONLY - Normally called by Order Service via Feign client. Do not use in production directly."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
