@@ -8,7 +8,7 @@
  *   pm2 delete all
  *
  * Startup order matters:
- *   1. config-server   (port 8888)
+ *   1. config-server   (port 9000)
  *   2. service-registry (port 8761)
  *   3. api-gateway     (port 8080)
  *   4. business services (ports 8081-8084)
@@ -49,11 +49,11 @@ module.exports = {
       min_uptime: "10s",
       env: {
         JAVA_OPTS: "-Xms128m -Xmx256m",
-        CONFIG_SERVER_URI: "http://localhost:8888",
+        CONFIG_SERVER_URI: "http://localhost:9000",
       },
       env_production: {
         JAVA_OPTS: "-Xms256m -Xmx512m",
-        CONFIG_SERVER_URI: "http://localhost:8888",
+        CONFIG_SERVER_URI: "http://localhost:9000",
       },
     },
     {
@@ -66,12 +66,12 @@ module.exports = {
       min_uptime: "10s",
       env: {
         JAVA_OPTS: "-Xms128m -Xmx256m",
-        CONFIG_SERVER_URI: "http://localhost:8888",
+        CONFIG_SERVER_URI: "http://localhost:9000",
         EUREKA_URI: "http://localhost:8761/eureka/",
       },
       env_production: {
         JAVA_OPTS: "-Xms256m -Xmx512m",
-        CONFIG_SERVER_URI: "http://localhost:8888",
+        CONFIG_SERVER_URI: "http://localhost:9000",
         EUREKA_URI: "http://localhost:8761/eureka/",
       },
     },
@@ -89,7 +89,7 @@ module.exports = {
       min_uptime: "15s",
       env: {
         JAVA_OPTS: "-Xms128m -Xmx256m",
-        CONFIG_SERVER_URI: "http://localhost:8888",
+        CONFIG_SERVER_URI: "http://localhost:9000",
         EUREKA_URI: "http://localhost:8761/eureka/",
         MYSQL_HOST: "localhost",
         MYSQL_USER: "root",
@@ -112,7 +112,7 @@ module.exports = {
       min_uptime: "15s",
       env: {
         JAVA_OPTS: "-Xms128m -Xmx256m",
-        CONFIG_SERVER_URI: "http://localhost:8888",
+        CONFIG_SERVER_URI: "http://localhost:9000",
         EUREKA_URI: "http://localhost:8761/eureka/",
         MYSQL_HOST: "localhost",
         MYSQL_USER: "root",
@@ -140,7 +140,7 @@ module.exports = {
       min_uptime: "15s",
       env: {
         JAVA_OPTS: "-Xms128m -Xmx256m",
-        CONFIG_SERVER_URI: "http://localhost:8888",
+        CONFIG_SERVER_URI: "http://localhost:9000",
         EUREKA_URI: "http://localhost:8761/eureka/",
         MYSQL_HOST: "localhost",
         MYSQL_USER: "root",
@@ -157,7 +157,7 @@ module.exports = {
       min_uptime: "15s",
       env: {
         JAVA_OPTS: "-Xms128m -Xmx256m",
-        CONFIG_SERVER_URI: "http://localhost:8888",
+        CONFIG_SERVER_URI: "http://localhost:9000",
         EUREKA_URI: "http://localhost:8761/eureka/",
         MONGO_HOST: "localhost",
         MONGO_USER: "admin",
