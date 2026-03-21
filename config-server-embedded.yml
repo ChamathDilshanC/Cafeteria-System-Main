@@ -1,0 +1,42 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: ${CONFIG_PROFILE:git}
+  cloud:
+    config:
+      server:
+        # Embedded Git Repository (Lecturer's Approach)
+        git:
+          uri: ${CONFIG_GIT_URI:file://${user.dir}/config-repo}
+          default-label: main
+          clone-on-start: true
+          force-pull: true
+          search-paths:
+            - platform
+            - services
+        # Native fallback
+        native:
+          search-locations: classpath:/config
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:9001/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,refresh,configprops
+  endpoint:
+    health:
+      show-details: always
