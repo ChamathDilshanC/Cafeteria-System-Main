@@ -32,7 +32,7 @@ module.exports = {
       min_uptime: "10s",
       env: {
         JAVA_OPTS: "-Xms128m -Xmx256m",
-        SPRING_PROFILES_ACTIVE: "native",
+        SPRING_PROFILES_ACTIVE: "git",
       },
       env_production: {
         JAVA_OPTS: "-Xms256m -Xmx512m",
