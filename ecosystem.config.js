@@ -84,6 +84,7 @@ module.exports = {
       script: 'java',
       args: '-jar services/user-service/target/user-service-1.0.0.jar',
       watch: false,
+      instances: 1,
       autorestart: true,
       max_restarts: 5,
       min_uptime: '15s',
@@ -98,6 +99,8 @@ module.exports = {
       },
       env_production: {
         JAVA_OPTS: '-Xms256m -Xmx512m',
+        CONFIG_SERVER_URI: 'http://config.platform:9000',
+        EUREKA_URI: 'http://vm-node-a.platform:8761/eureka/,http://vm-node-b.platform:8761/eureka/,http://vm-node-c.platform:8761/eureka/',
         // Override from GCP metadata or Secret Manager:
         // MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, JWT_SECRET
       },
@@ -107,6 +110,7 @@ module.exports = {
       script: 'java',
       args: '-jar services/menu-service/target/menu-service-1.0.0.jar',
       watch: false,
+      instances: 1,
       autorestart: true,
       max_restarts: 5,
       min_uptime: '15s',
@@ -125,6 +129,8 @@ module.exports = {
       },
       env_production: {
         JAVA_OPTS: '-Xms256m -Xmx512m',
+        CONFIG_SERVER_URI: 'http://config.platform:9000',
+        EUREKA_URI: 'http://vm-node-a.platform:8761/eureka/,http://vm-node-b.platform:8761/eureka/,http://vm-node-c.platform:8761/eureka/',
         // On GCP VMs with Workload Identity the credentials are auto-injected;
         // remove GOOGLE_APPLICATION_CREDENTIALS and leave GCS_BUCKET_NAME / GCP_PROJECT_ID only.
         GCS_BUCKET_NAME: 'cafeteria-menu-images',
@@ -136,6 +142,7 @@ module.exports = {
       script: 'java',
       args: '-jar services/order-service/target/order-service-1.0.0.jar',
       watch: false,
+      instances: 1,
       autorestart: true,
       max_restarts: 5,
       min_uptime: '15s',
@@ -147,12 +154,18 @@ module.exports = {
         MYSQL_USER: 'root',
         MYSQL_PASSWORD: 'rootpassword',
       },
+      env_production: {
+        JAVA_OPTS: '-Xms256m -Xmx512m',
+        CONFIG_SERVER_URI: 'http://config.platform:9000',
+        EUREKA_URI: 'http://vm-node-a.platform:8761/eureka/,http://vm-node-b.platform:8761/eureka/,http://vm-node-c.platform:8761/eureka/',
+      },
     },
     {
       name: 'kitchen-service',
       script: 'java',
       args: '-jar services/kitchen-service/target/kitchen-service-1.0.0.jar',
       watch: false,
+      instances: 1,
       autorestart: true,
       max_restarts: 5,
       min_uptime: '15s',
@@ -164,6 +177,11 @@ module.exports = {
         MONGO_USER: 'admin',
         MONGO_PASSWORD: 'adminpassword',
       },
+      env_production: {
+        JAVA_OPTS: '-Xms256m -Xmx512m',
+        CONFIG_SERVER_URI: 'http://config.platform:9000',
+        EUREKA_URI: 'http://vm-node-a.platform:8761/eureka/,http://vm-node-b.platform:8761/eureka/,http://vm-node-c.platform:8761/eureka/',
+      }
     },
 
     // ─────────────────────────────────────────────
