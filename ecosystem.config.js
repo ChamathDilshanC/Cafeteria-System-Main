@@ -1,205 +1,43 @@
-/**
- * PM2 Ecosystem File — Cafeteria Management System
- *
- * Usage (local dev):
- *   pm2 start ecosystem.config.js
- *   pm2 logs
- *   pm2 stop all
- *   pm2 delete all
- *
- * Startup order matters:
- *   1. config-server   (port 9000)
- *   2. service-registry (port 8761)
- *   3. api-gateway     (port 8080)
- *   4. business services (ports 8081-8084)
- *
- * On GCP VMs, override environment variables via the env_production block
- * or supply them through GCP Secret Manager / instance metadata.
- */
-
 module.exports = {
   apps: [
-    // ─────────────────────────────────────────────
-    // PLATFORM — start these first
-    // ─────────────────────────────────────────────
     {
-      name: 'config-server',
-      script: 'java',
-      args: '-jar platform/config-server/target/config-server-1.0.0.jar',
-      watch: false,
-      autorestart: true,
-      max_restarts: 5,
-      min_uptime: '10s',
-      env: {
-        JAVA_OPTS: '-Xms128m -Xmx256m',
-        SPRING_PROFILES_ACTIVE: 'git,dev',
-      },
-      env_production: {
-        JAVA_OPTS: '-Xms256m -Xmx512m',
-        EUREKA_URI: 'http://localhost:8761/eureka/',
-      },
+      name: "config-server",
+      script: "java -jar platform/config-server/target/config-server-1.0.0.jar",
+      log_file: "./logs/config-server.log"
     },
     {
-      name: 'service-registry',
-      script: 'java',
-      args: '-jar platform/service-registry/target/service-registry-1.0.0.jar',
-      watch: false,
-      autorestart: true,
-      max_restarts: 5,
-      min_uptime: '10s',
-      env: {
-        JAVA_OPTS: '-Xms128m -Xmx256m',
-        CONFIG_SERVER_URI: 'http://localhost:9000',
-      },
-      env_production: {
-        JAVA_OPTS: '-Xms256m -Xmx512m',
-        CONFIG_SERVER_URI: 'http://localhost:9000',
-      },
+      name: "service-registry",
+      script: "java -jar platform/service-registry/target/service-registry-1.0.0.jar",
+      log_file: "./logs/service-registry.log"
     },
     {
-      name: 'api-gateway',
-      script: 'java',
-      args: '-jar platform/api-gateway/target/api-gateway-1.0.0.jar',
-      watch: false,
-      autorestart: true,
-      max_restarts: 5,
-      min_uptime: '10s',
-      env: {
-        JAVA_OPTS: '-Xms128m -Xmx256m',
-        CONFIG_SERVER_URI: 'http://localhost:9000',
-        EUREKA_URI: 'http://localhost:8761/eureka/',
-      },
-      env_production: {
-        JAVA_OPTS: '-Xms256m -Xmx512m',
-        CONFIG_SERVER_URI: 'http://localhost:9000',
-        EUREKA_URI: 'http://localhost:8761/eureka/',
-      },
-    },
-
-    // ─────────────────────────────────────────────
-    // BUSINESS SERVICES
-    // ─────────────────────────────────────────────
-    {
-      name: 'user-service',
-      script: 'java',
-      args: '-jar services/user-service/target/user-service-1.0.0.jar',
-      watch: false,
-      instances: 1,
-      autorestart: true,
-      max_restarts: 5,
-      min_uptime: '15s',
-      env: {
-        JAVA_OPTS: '-Xms128m -Xmx256m',
-        CONFIG_SERVER_URI: 'http://localhost:9000',
-        EUREKA_URI: 'http://localhost:8761/eureka/',
-        MYSQL_HOST: 'localhost',
-        MYSQL_USER: 'root',
-        MYSQL_PASSWORD: 'rootpassword',
-        JWT_SECRET: 'my-super-secret-jwt-key-for-cafeteria-system-dev',
-      },
-      env_production: {
-        JAVA_OPTS: '-Xms256m -Xmx512m',
-        CONFIG_SERVER_URI: 'http://config.platform:9000',
-        EUREKA_URI: 'http://vm-node-a.platform:8761/eureka/,http://vm-node-b.platform:8761/eureka/,http://vm-node-c.platform:8761/eureka/',
-        // Override from GCP metadata or Secret Manager:
-        // MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, JWT_SECRET
-      },
+      name: "api-gateway",
+      script: "java -jar platform/api-gateway/target/api-gateway-1.0.0.jar",
+      log_file: "./logs/api-gateway.log"
     },
     {
-      name: 'menu-service',
-      script: 'java',
-      args: '-jar services/menu-service/target/menu-service-1.0.0.jar',
-      watch: false,
-      instances: 1,
-      autorestart: true,
-      max_restarts: 5,
-      min_uptime: '15s',
-      env: {
-        JAVA_OPTS: '-Xms128m -Xmx256m',
-        CONFIG_SERVER_URI: 'http://localhost:9000',
-        EUREKA_URI: 'http://localhost:8761/eureka/',
-        MYSQL_HOST: 'localhost',
-        MYSQL_USER: 'root',
-        MYSQL_PASSWORD: 'rootpassword',
-        GCS_BUCKET_NAME: 'cafeteria-menu-images',
-        GCP_PROJECT_ID: 'food-order-management-eca',
-        // Path to your GCP service-account key JSON (download from GCP console → IAM → Service Accounts)
-        GOOGLE_APPLICATION_CREDENTIALS:
-          'C:/Users/chamm/Desktop/EnterpriseCloudArchitecture_Final/docs/keys/gcs-key.json',
-      },
-      env_production: {
-        JAVA_OPTS: '-Xms256m -Xmx512m',
-        CONFIG_SERVER_URI: 'http://config.platform:9000',
-        EUREKA_URI: 'http://vm-node-a.platform:8761/eureka/,http://vm-node-b.platform:8761/eureka/,http://vm-node-c.platform:8761/eureka/',
-        // On GCP VMs with Workload Identity the credentials are auto-injected;
-        // remove GOOGLE_APPLICATION_CREDENTIALS and leave GCS_BUCKET_NAME / GCP_PROJECT_ID only.
-        GCS_BUCKET_NAME: 'cafeteria-menu-images',
-        GCP_PROJECT_ID: 'food-order-management-eca',
-      },
+      name: "user-service",
+      script: "java -jar services/user-service/target/user-service-1.0.0.jar",
+      log_file: "./logs/user-service.log",
+      instances: 2
     },
     {
-      name: 'order-service',
-      script: 'java',
-      args: '-jar services/order-service/target/order-service-1.0.0.jar',
-      watch: false,
-      instances: 1,
-      autorestart: true,
-      max_restarts: 5,
-      min_uptime: '15s',
-      env: {
-        JAVA_OPTS: '-Xms128m -Xmx256m',
-        CONFIG_SERVER_URI: 'http://localhost:9000',
-        EUREKA_URI: 'http://localhost:8761/eureka/',
-        MYSQL_HOST: 'localhost',
-        MYSQL_USER: 'root',
-        MYSQL_PASSWORD: 'rootpassword',
-      },
-      env_production: {
-        JAVA_OPTS: '-Xms256m -Xmx512m',
-        CONFIG_SERVER_URI: 'http://config.platform:9000',
-        EUREKA_URI: 'http://vm-node-a.platform:8761/eureka/,http://vm-node-b.platform:8761/eureka/,http://vm-node-c.platform:8761/eureka/',
-      },
+      name: "menu-service",
+      script: "java -jar services/menu-service/target/menu-service-1.0.0.jar",
+      log_file: "./logs/menu-service.log",
+      instances: 2
     },
     {
-      name: 'kitchen-service',
-      script: 'java',
-      args: '-jar services/kitchen-service/target/kitchen-service-1.0.0.jar',
-      watch: false,
-      instances: 1,
-      autorestart: true,
-      max_restarts: 5,
-      min_uptime: '15s',
-      env: {
-        JAVA_OPTS: '-Xms128m -Xmx256m',
-        CONFIG_SERVER_URI: 'http://localhost:9000',
-        EUREKA_URI: 'http://localhost:8761/eureka/',
-        MONGO_HOST: 'localhost',
-        MONGO_USER: 'admin',
-        MONGO_PASSWORD: 'adminpassword',
-      },
-      env_production: {
-        JAVA_OPTS: '-Xms256m -Xmx512m',
-        CONFIG_SERVER_URI: 'http://config.platform:9000',
-        EUREKA_URI: 'http://vm-node-a.platform:8761/eureka/,http://vm-node-b.platform:8761/eureka/,http://vm-node-c.platform:8761/eureka/',
-      }
+      name: "order-service",
+      script: "java -jar services/order-service/target/order-service-1.0.0.jar",
+      log_file: "./logs/order-service.log",
+      instances: 2
     },
-
-    // ─────────────────────────────────────────────
-    // FRONTEND — Vite Vue 3 app
-    // Before first run:  cd webapp && npm install && npm run build
-    // Requires:          npm install -g serve
-    // ─────────────────────────────────────────────
     {
-      name: 'webapp',
-      script: 'serve',
-      args: '-s webapp/dist -l 3000',
-      watch: false,
-      autorestart: true,
-      env: {
-        NODE_ENV: 'production',
-        // Override the API gateway URL if your gateway is not on localhost:8080
-        // VITE_GATEWAY_URL is baked in at build-time, so rebuild if you change it.
-      },
-    },
-  ],
+      name: "kitchen-service",
+      script: "java -jar services/kitchen-service/target/kitchen-service-1.0.0.jar",
+      log_file: "./logs/kitchen-service.log",
+      instances: 2
+    }
+  ]
 };
