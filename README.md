@@ -19,7 +19,7 @@
    │              │              │              │
    ▼              ▼              ▼              ▼
 user-service  menu-service  order-service  kitchen-service
- (8081/MySQL)  (8082/MySQL+GCS) (8083/MySQL)  (8084/MongoDB)
+ (8081/PostgreSQL)  (8082/PostgreSQL+GCS) (8083/PostgreSQL)  (8084/MongoDB)
 
            All services register with ↓
 ┌───────────────────────────────────────────────────────┐
@@ -40,19 +40,19 @@ user-service  menu-service  order-service  kitchen-service
 
 ```
 EnterpriseCloudArchitecture_Final/
-├── docker-compose.yml          ← MySQL + MongoDB for local dev
+├── docker-compose.yml          ← PostgreSQL + MongoDB for local dev
 ├── ecosystem.config.js         ← PM2 config for GCP VMs
 ├── init-scripts/
-│   └── mysql/
+│   └── postgres/
 │       └── 00_create_databases.sql
 ├── platform/
 │   ├── config-server/          (port 8888) — Spring Cloud Config
 │   ├── service-registry/       (port 8761) — Netflix Eureka
 │   └── api-gateway/            (port 8080) — Spring Cloud Gateway
 ├── services/
-│   ├── user-service/           (port 8081) — Auth/Users   [MySQL]
-│   ├── menu-service/           (port 8082) — Menu/Items   [MySQL + GCS]
-│   ├── order-service/          (port 8083) — Orders       [MySQL]
+│   ├── user-service/           (port 8081) — Auth/Users   [PostgreSQL]
+│   ├── menu-service/           (port 8082) — Menu/Items   [PostgreSQL + GCS]
+│   ├── order-service/          (port 8083) — Orders       [PostgreSQL]
 │   └── kitchen-service/        (port 8084) — Kitchen Queue[MongoDB]
 └── webapp/                      (port 3000) — Frontend
 ```
@@ -133,9 +133,9 @@ The Config Server delivers the full configuration at startup.
 | ------------------- | ----------------------------- | --------------------- |
 | `CONFIG_SERVER_URI` | http://localhost:8888         | URL of Config Server  |
 | `EUREKA_URI`        | http://localhost:8761/eureka/ | Eureka endpoint       |
-| `MYSQL_HOST`        | localhost                     | MySQL hostname        |
-| `MYSQL_USER`        | root                          | MySQL username        |
-| `MYSQL_PASSWORD`    | rootpassword                  | MySQL password        |
+| `POSTGRES_HOST`     | localhost                     | PostgreSQL hostname   |
+| `POSTGRES_USER`     | postgres                      | PostgreSQL username   |
+| `POSTGRES_PASSWORD` | postgrespassword              | PostgreSQL password   |
 | `MONGO_HOST`        | localhost                     | MongoDB hostname      |
 | `MONGO_USER`        | admin                         | MongoDB username      |
 | `MONGO_PASSWORD`    | adminpassword                 | MongoDB password      |
@@ -156,7 +156,7 @@ On GCP, set these in each VM's startup script or use Secret Manager.
 | Cloud        | Spring Cloud 2024.0.1 (Leyton)    |
 | Service Mesh | Netflix Eureka + Spring Gateway   |
 | Config       | Spring Cloud Config (native)      |
-| DB (SQL)     | MySQL 8.0 via Spring Data JPA     |
+| DB (SQL)     | PostgreSQL 16 via Spring Data JPA |
 | DB (NoSQL)   | MongoDB 7.0 via Spring Data Mongo |
 | File Storage | Google Cloud Storage (GCS)        |
 | Auth         | JWT (jjwt 0.12.6)                 |
